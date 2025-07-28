@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Create from './pages/Create';
 import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/create" element={<Create />} />
                 </Routes>
+                <Footer />
             </div>
         </Router>
     );

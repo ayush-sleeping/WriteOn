@@ -5,7 +5,7 @@ import Logo from '/src/assets/writeon_logo.png';
 
 function Header() {
     return (
-        <header className="bg-primary shadow-md sticky top-0 z-50">
+        <header className="bg-primary sticky top-0 z-50">
             <div className="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
                 {/* Left: Logo and Search */}
                 <div className="flex items-center gap-4 flex-shrink-0">
