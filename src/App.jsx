@@ -11,8 +11,10 @@ import Footer from './components/Footer/Footer';
 import { signOut } from 'firebase/auth';
 
 function App() {
-
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        // Read from localStorage to persist auth state across reloads
+        return localStorage.getItem("isAuth") === "true";
+    });
     return (
         <>
             <ScrollToTop />
@@ -21,7 +23,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-                    <Route path="/create" element={<Create />} />
+                    <Route path="/create" element={<Create isAuthenticated={isAuthenticated} />} />
                 </Routes>
                 <Footer />
             </div>

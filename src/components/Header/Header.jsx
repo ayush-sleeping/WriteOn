@@ -49,9 +49,11 @@ function Header({ setIsAuthenticated }) {
                 </div>
                 {/* Right: Auth Buttons */}
                 <div className="flex items-center gap-3">
-                    <Link to="/create">
-                        <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Create</button>
-                    </Link>
+                    {isAuthenticated && (
+                        <Link to="/create">
+                            <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Create</button>
+                        </Link>
+                    )}
                     {isAuthenticated ? (
                         <button
                             className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors"
