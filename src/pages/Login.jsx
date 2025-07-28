@@ -1,14 +1,17 @@
 import React from 'react';
 import { auth, provider } from '../firebase-config';
 import { signInWithPopup } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Login({ setIsAuthenticated }) {
+    const navigate = useNavigate();
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
                 // Handle successful authentication
                 localStorage.setItem("isAuth", true);
                 setIsAuthenticated(true);
+                navigate('/'); // Redirect to home page after successful login
                 console.log('User signed in:', result.user);
             })
             .catch((error) => {

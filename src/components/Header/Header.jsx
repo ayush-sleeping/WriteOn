@@ -1,9 +1,22 @@
-
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '/src/assets/writeon_logo.png';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase-config';
 
-function Header() {
+
+function Header({ setIsAuthenticated }) {
+    const isAuthenticated = localStorage.getItem("isAuth") === "true";
+    const navigate = useNavigate();
+    const signUserOut = () => {
+        signOut(auth).then(() => {
+            localStorage.removeItem("isAuth");
+            if (setIsAuthenticated) setIsAuthenticated(false);
+            navigate('/login');
+        }).catch((error) => {
+            console.error('Error signing out:', error);
+        });
+    };
     return (
         <header className="bg-primary sticky top-0 z-50">
             <div className="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
@@ -39,12 +52,18 @@ function Header() {
                     <Link to="/create">
                         <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Create</button>
                     </Link>
-                    <Link to="/login">
-                        <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Log in</button>
-                    </Link>
-                    <Link to="/signup">
-                        <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:bg-white  hover:text-secondary font-medium transition-colors">Create Account</button>
-                    </Link>
+                    {isAuthenticated ? (
+                        <button
+                            className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors"
+                            onClick={signUserOut}
+                        >
+                            Log out
+                        </button>
+                    ) : (
+                        <Link to="/login">
+                            <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Log in</button>
+                        </Link>
+                    )}
                 </div>
             </div>
         </header>
@@ -52,3 +71,14 @@ function Header() {
 }
 
 export default Header;
+
+
+
+// <Link to="/profile">
+//     <img
+//         src="https://randomuser.me/api/portraits/men/32.jpg"
+//         alt="Profile"
+//         className="w-10 h-10 rounded-full object-cover border-2 shadow-sm hover:opacity-80 transition"
+//         style={{ borderColor: 'var(--secondary-color)' }}
+//     />
+// </Link>
