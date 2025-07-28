@@ -1,23 +1,24 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css'
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Create from './pages/Create';
+import Header from './components/Header/Header';
 
 function App() {
     return (
         <Router basename="/WriteOn">
-            <nav>
-                <Link to="/">Home</Link>
-                <Link to="/login">Login</Link>
-                <Link to="/create">Create</Link>
-            </nav>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/create" element={<Create />} />
-            </Routes>
+            <ScrollToTop />
+            <div className='app'>
+                <Header />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/create" element={<Create />} />
+                </Routes>
+            </div>
         </Router>
     );
 }
