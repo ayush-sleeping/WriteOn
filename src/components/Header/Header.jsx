@@ -50,9 +50,19 @@ function Header({ setIsAuthenticated }) {
                 {/* Right: Auth Buttons */}
                 <div className="flex items-center gap-3">
                     {isAuthenticated && (
-                        <Link to="/create">
-                            <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Create</button>
-                        </Link>
+                        <>
+                            <Link to="/profile">
+                                <img
+                                    src="https://randomuser.me/api/portraits/men/32.jpg"
+                                    alt="Profile"
+                                    className="w-10 h-10 rounded-full object-cover border-2 shadow-sm hover:opacity-80 transition"
+                                    style={{ borderColor: 'var(--secondary-color)' }}
+                                />
+                            </Link>
+                            <Link to="/create">
+                                <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Create</button>
+                            </Link>
+                        </>
                     )}
                     {isAuthenticated ? (
                         <button
@@ -73,14 +83,3 @@ function Header({ setIsAuthenticated }) {
 }
 
 export default Header;
-
-
-
-// <Link to="/profile">
-//     <img
-//         src="https://randomuser.me/api/portraits/men/32.jpg"
-//         alt="Profile"
-//         className="w-10 h-10 rounded-full object-cover border-2 shadow-sm hover:opacity-80 transition"
-//         style={{ borderColor: 'var(--secondary-color)' }}
-//     />
-// </Link>

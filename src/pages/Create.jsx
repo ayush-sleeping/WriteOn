@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../firebase-config';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function Create({ isAuthenticated }) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const editorRef = useRef(null);
     const [tags, setTags] = useState([]); // array of tags
     const [tagInput, setTagInput] = useState('');
     const [coverImage, setCoverImage] = useState(null); // base64 string
@@ -81,12 +82,52 @@ function Create({ isAuthenticated }) {
         });
         navigate('/');
     };
+    // Load Jodit editor via CDN and initialize
     useEffect(() => {
         // Debug: log isAuthenticated value
         console.log('isAuthenticated in Create:', isAuthenticated);
         if (!isAuthenticated) {
             navigate('/login'); // Redirect to login if not authenticated
         }
+
+        // Dynamically load Jodit CSS/JS if not already present
+        if (!window.Jodit) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.css';
+            document.head.appendChild(link);
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.js';
+            script.onload = () => {
+                if (editorRef.current && window.Jodit) {
+                    window.joditInstance = window.Jodit.make(editorRef.current, {
+                        buttons: ['bold', 'italic', 'underline', '|', 'ul', 'ol', '|', 'link', 'image', 'hr', '|', 'left', 'center', 'right', 'justify'],
+                        height: 220,
+                        events: {
+                            change: (newValue) => setContent(newValue)
+                        }
+                    });
+                }
+            };
+            document.body.appendChild(script);
+        } else {
+            if (editorRef.current && window.Jodit) {
+                window.joditInstance = window.Jodit.make(editorRef.current, {
+                    buttons: ['bold', 'italic', 'underline', '|', 'ul', 'ol', '|', 'link', 'image', 'hr', '|', 'left', 'center', 'right', 'justify'],
+                    height: 220,
+                    events: {
+                        change: (newValue) => setContent(newValue)
+                    }
+                });
+            }
+        }
+        // Cleanup on unmount
+        return () => {
+            if (window.joditInstance) {
+                window.joditInstance.destruct();
+                window.joditInstance = null;
+            }
+        };
     }, [isAuthenticated, navigate]);
     return (
         <div className="createPostPage min-h-[calc(100vh-80px)] bg-primary flex flex-col items-center justify-center px-4 py-12">
@@ -125,12 +166,15 @@ function Create({ isAuthenticated }) {
                         value={title}
                         onChange={e => setTitle(e.target.value)}
                     />
-                    <textarea
-                        placeholder="Content"
-                        className="w-full px-4 py-3 rounded-2xl bg-primary text-secondary placeholder:text-secondary border-none outline-none text-base min-h-[120px] resize-y transition focus:bg-secondary-hover"
-                        value={content}
-                        onChange={e => setContent(e.target.value)}
-                    />
+                    <div>
+                        <label className="block text-secondary font-medium mb-1">Content</label>
+                        <div
+                            ref={editorRef}
+                            id="editor"
+                            className="w-full px-4 py-3 rounded-2xl bg-primary text-secondary border border-secondary focus-within:bg-secondary-hover min-h-[120px] transition"
+                            style={{ minHeight: 120, background: 'var(--primary-color)' }}
+                        />
+                    </div>
                     {/* Tag display just above tag input */}
                     {tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-2">
