@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase-config';
 import { Link } from 'react-router-dom';
+import { FiHome, FiInfo, FiMail, FiShield, FiUser, FiFileText } from 'react-icons/fi';
 
 function Home() {
     // --- State ---
@@ -42,19 +43,41 @@ function Home() {
         <div className="min-h-[calc(100vh-80px)] bg-primary flex flex-col items-center px-4 py-12">
             {/* --- Main Content Row: Hero, Blog List, and Active Discussions Side by Side --- */}
             <div className="w-full flex flex-col lg:flex-row gap-12 items-start justify-center">
-                {/* --- Hero Section --- */}
-                <div className="w-full lg:w-1/4 flex flex-col items-center text-center mb-10 lg:mb-0">
-                    <h1 className="text-4xl md:text-5xl font-bold text-secondary mb-4">Welcome to <span className="text-white">WriteOn</span></h1>
-                    <p className="text-lg md:text-xl text-secondary mb-8">This is the home page of our application. Start creating, sharing, and exploring amazing blogs with a beautiful, modern interface.</p>
-                    {/* --- Main Call-to-Action Buttons --- */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
-                        <Link to="/create" className="px-6 py-3 rounded-full bg-secondary text-primary font-semibold hover:bg-white hover:text-secondary transition">Create Blog</Link>
-                        <Link to="/login" className="px-6 py-3 rounded-full border border-secondary text-secondary font-semibold hover:bg-secondary hover:text-primary transition">Log In</Link>
+                {/* --- Sidebar Section --- */}
+                <div className="w-full lg:basis-[20%] flex flex-col gap-6 text-secondary text-sm mb-10 lg:mb-0">
+                    <nav className="flex flex-col gap-2">
+                        <Link to="/" className="hover:text-primary font-bold flex items-center gap-2"><FiHome /> Home</Link>
+                        <Link to="/about" target="_blank" rel="noopener noreferrer" className="hover:text-primary font-bold flex items-center gap-2"><FiInfo /> About</Link>
+                        <Link to="/contact" target="_blank" rel="noopener noreferrer" className="hover:text-primary font-bold flex items-center gap-2"><FiMail /> Contact</Link>
+                        <Link to="/code-of-conduct" target="_blank" rel="noopener noreferrer" className="hover:text-primary font-bold flex items-center gap-2"><FiShield /> Code of Conduct</Link>
+                        <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-primary font-bold flex items-center gap-2"><FiUser /> Privacy Policy</Link>
+                        <Link to="/terms-of-use" target="_blank" rel="noopener noreferrer" className="hover:text-primary font-bold flex items-center gap-2"><FiFileText /> Terms of use</Link>
+                    </nav>
+                    <div>
+                        <span className="font-bold text-primary text-base mb-2 block pt-4">Tags</span>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                            <span className="bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#webdev</span>
+                            <span className="bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#opensource</span>
+                            <span className="bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#machinelearning</span>
+                            <span className="bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#android</span>
+                            <span className="bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#git</span>
+                            <span className="bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#computerscience</span>
+                            <span className="bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#kotlin</span>
+                        </div>
+                    </div>
+                    <div className="mt-4 border-secondary pt-4">
+                        <div className="bg-secondary rounded-2xl p-4">
+                            <span className="font-bold text-primary text-base mb-2 block">WriteOn Community</span>
+                            <p className="text-xs text-secondary mb-2">Welcome to WriteOn — your space to write, share, and discover insightful blogs from developers and creators around the world.</p>
+                            <p className="text-xs text-secondary mb-2">Join the conversation, connect with like-minded people, and grow your knowledge in tech, coding, and beyond.</p>
+                            <p className="text-xs text-secondary mb-2">WriteOn is built for the community, by the community. We believe in open sharing, learning, and supporting each other's journeys.</p>
+                            <p className="text-xs text-secondary">Made with ❤️ using React, Firebase, and a passion for writing. WriteOn © 2025.</p>
+                        </div>
                     </div>
                 </div>
 
                 {/* --- Blog Posts List --- */}
-                <div className="w-full lg:w-2/4 flex flex-col gap-6">
+                <div className="w-full lg:basis-[50%] flex flex-col gap-6">
                     {loading ? (
                         <div className="text-secondary text-lg text-center">Loading posts...</div>
                     ) : error ? (
@@ -117,8 +140,8 @@ function Home() {
                 </div>
 
                 {/* --- Active Discussions Section (Static) --- */}
-                <div className="w-full lg:w-1/4 flex flex-col gap-4 bg-secondary/80 rounded-2xl p-6 shadow-md mt-10 lg:mt-0">
-                    <h2 className="text-xl font-bold text-primary mb-4">Active Discussions</h2>
+                <div className="w-full lg:basis-[30%] flex flex-col gap-4 bg-secondary/80 rounded-2xl shadow-md mt-10 lg:mt-0">
+                    <h2 className="text-xl font-bold text-white mb-4">Active Discussions</h2>
                     <ul className="flex flex-col gap-4">
                         <li className="bg-primary/80 rounded-xl p-4 flex flex-col gap-1 border border-secondary">
                             <span className="font-semibold text-secondary">Why I Ditched Cursor for Kiro - The Ultimate AI IDE for Beginners🚀</span>
