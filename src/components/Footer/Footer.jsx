@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Footer() {
     return (
@@ -14,19 +15,32 @@ function Footer() {
                     <p className="text-secondary mb-2">Made with <span className="text-[#BA6573]">❤</span> by Ayush</p>
                     <p className="text-[#818181] text-xs">2025 © All Rights Reserved</p>
                 </div>
-                {/* Col 2 */}
+                {/* Col 2: About Navigation */}
                 <div className="col2 footer-box mb-8 md:mb-0">
                     <p className="text-white font-semibold mb-2">About</p>
-                    <p className="text-secondary mb-1 cursor-pointer hover:text-white transition">Our mission</p>
-                    <p className="text-secondary mb-1 cursor-pointer hover:text-white transition">Privacy Policy</p>
-                    <p className="text-secondary mb-1 cursor-pointer hover:text-white transition">Terms of service</p>
+                    <Link to="/about" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Our mission</Link>
+                    <Link to="/privacy" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Privacy Policy</Link>
+                    <Link to="/terms" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Terms of service</Link>
                 </div>
-                {/* Col 3 */}
+                {/* Col 3: Blog Navigation */}
                 <div className="col3 footer-box">
-                    <p className="text-white font-semibold mb-2">Services</p>
-                    <p className="text-secondary mb-1 cursor-pointer hover:text-white transition">Products</p>
-                    <p className="text-secondary mb-1 cursor-pointer hover:text-white transition">Join our team</p>
-                    <p className="text-secondary mb-1 cursor-pointer hover:text-white transition">Partner with us</p>
+                    <p className="text-white font-semibold mb-2">Blog</p>
+                    {localStorage.getItem("isAuth") === "true" ? (
+                        <>
+                            <Link to="/create" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Write a Blog</Link>
+                            <Link to="/myblogs" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">My Blogs</Link>
+                        </>
+                    ) : (
+                        <Link to="/login" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Log In</Link>
+                    )}
+                    <a
+                        href="https://github.com/ayush-sleeping/WriteOn"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-secondary mb-1 cursor-pointer hover:text-white transition block"
+                    >
+                        FAQ / Help
+                    </a>
                 </div>
             </div>
         </footer>
