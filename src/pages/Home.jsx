@@ -90,13 +90,22 @@ function Home() {
                                     <span>By {post.author?.name || 'Unknown'}</span>
                                 </div>
                                 {isAuthor && (
-                                    <button
-                                        onClick={() => openDeleteModal(post.id)}
-                                        className="absolute top-4 right-4 px-3 py-1 rounded-full bg-red-500 text-white text-xs font-semibold shadow hover:bg-red-700 transition"
-                                        title="Delete this post"
-                                    >
-                                        Delete
-                                    </button>
+                                    <div className="absolute top-4 right-4 flex gap-2">
+                                        <button
+                                            onClick={() => openDeleteModal(post.id)}
+                                            className="px-3 py-1 rounded-full bg-red-500 text-white text-xs font-semibold shadow hover:bg-red-700 transition"
+                                            title="Delete this post"
+                                        >
+                                            Delete
+                                        </button>
+                                        <Link
+                                            to={`/update/${post.id}`}
+                                            className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold shadow hover:bg-blue-700 transition"
+                                            title="Edit this post"
+                                        >
+                                            Update
+                                        </Link>
+                                    </div>
                                 )}
                             </div>
                         );

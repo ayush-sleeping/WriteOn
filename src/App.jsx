@@ -5,6 +5,7 @@ import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Create from './pages/Create';
+import Update from './pages/Update';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create" element={<Create isAuthenticated={isAuthenticated} />} />
+                    <Route path="/update/:id" element={<Update isAuthenticated={isAuthenticated} />} />
                 </Routes>
                 <Footer />
             </div>
