@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Create from './pages/Create';
 import Update from './pages/Update';
+import Blog from './pages/Blog';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create" element={<Create isAuthenticated={isAuthenticated} />} />
                     <Route path="/update/:id" element={<Update isAuthenticated={isAuthenticated} />} />
+                    <Route path="/blog/:id" element={<Blog />} />
                 </Routes>
                 <Footer />
             </div>

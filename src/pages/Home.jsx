@@ -73,26 +73,28 @@ function Home() {
                     posts.map(post => {
                         const isAuthor = post.author?.id && currentUserId && post.author.id === currentUserId;
                         return (
-                            <div key={post.id} className="bg-secondary rounded-2xl shadow-md p-6 text-left relative">
-                                {post.coverImage && (
-                                    <img src={post.coverImage} alt="Cover" className="mb-4 w-full max-h-60 object-contain rounded-xl border border-secondary" />
-                                )}
-                                <h2 className="text-2xl font-bold text-primary mb-2">{post.title}</h2>
-                                <div className="text-base text-secondary mb-4 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
-                                {Array.isArray(post.tags) && post.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-2 mb-2">
-                                        {post.tags.map((tag, idx) => (
-                                            <span key={tag + idx} className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#{tag}</span>
-                                        ))}
+                            <div key={post.id} className="relative group">
+                                <Link to={`/blog/${post.id}`} className="block bg-secondary rounded-2xl shadow-md p-6 text-left hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary">
+                                    {post.coverImage && (
+                                        <img src={post.coverImage} alt="Cover" className="mb-4 w-full max-h-60 object-contain rounded-xl border border-secondary" />
+                                    )}
+                                    <h2 className="text-2xl font-bold text-primary mb-2">{post.title}</h2>
+                                    <div className="text-base text-secondary mb-4 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
+                                    {Array.isArray(post.tags) && post.tags.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 mb-2">
+                                            {post.tags.map((tag, idx) => (
+                                                <span key={tag + idx} className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow border border-secondary">#{tag}</span>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                                        <span>By {post.author?.name || 'Unknown'}</span>
                                     </div>
-                                )}
-                                <div className="flex items-center gap-2 text-sm text-gray-400">
-                                    <span>By {post.author?.name || 'Unknown'}</span>
-                                </div>
+                                </Link>
                                 {isAuthor && (
-                                    <div className="absolute top-4 right-4 flex gap-2">
+                                    <div className="absolute top-4 right-4 flex gap-2 z-10">
                                         <button
-                                            onClick={() => openDeleteModal(post.id)}
+                                            onClick={e => { e.preventDefault(); openDeleteModal(post.id); }}
                                             className="px-3 py-1 rounded-full bg-red-500 text-white text-xs font-semibold shadow hover:bg-red-700 transition"
                                             title="Delete this post"
                                         >
@@ -102,6 +104,7 @@ function Home() {
                                             to={`/update/${post.id}`}
                                             className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold shadow hover:bg-blue-700 transition"
                                             title="Edit this post"
+                                            onClick={e => e.stopPropagation()}
                                         >
                                             Update
                                         </Link>
