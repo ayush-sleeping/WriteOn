@@ -5,7 +5,6 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase-config';
 import './Header.css';
 
-
 function Header({ setIsAuthenticated }) {
     // --- Auth & Profile State ---
     const isAuthenticated = localStorage.getItem("isAuth") === "true";
@@ -123,7 +122,7 @@ function Header({ setIsAuthenticated }) {
     // --- Render ---
     return (
         <nav className="floating-navbar-container">
-            <div className="floating-navbar max-w-6xl mx-auto">
+            <div className="floating-navbar">
                 <div className="flex items-center justify-between gap-4">
                     {/* --- Left: Logo --- */}
                     <Link to="/" className="text-white text-xl font-bold hover:opacity-80 transition flex-shrink-0">

@@ -14,13 +14,6 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Additional styles for better responsive behavior */
-.floating-navbar-container {
-    width: 100%;
-    max-width: 1440px; /* or 1536px for 6xl, or remove for full width */
-    padding: 0 1rem;
-}
-
 /* Search input styling to match navbar */
 .search-input {
     background: rgba(26, 26, 26, 0.8);

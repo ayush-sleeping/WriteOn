@@ -130,17 +130,26 @@ function Create({ isAuthenticated }) {
         };
     }, [isAuthenticated, navigate]);
     return (
-        <div className="createPostPage min-h-[calc(100vh-80px)] bg-primary flex flex-col items-center justify-center px-4 py-12">
-            <div className="max-w-lg w-full bg-secondary rounded-2xl shadow-lg p-8 flex flex-col items-center">
-                <h1 className="text-3xl md:text-4xl font-bold text-secondary mb-2">Create a New Post</h1>
-                <p className="text-base text-secondary mb-6">Fill out the form below to create a new blog post.</p>
-                <form className="w-full flex flex-col gap-4">
-                    {/* Cover image upload */}
-                    <div className="mb-2">
-                        <label className="block text-secondary font-medium mb-1">Cover Image (optional)</label>
-                        <div className="flex items-center gap-3">
-                            <label htmlFor="cover-image-upload" className="cursor-pointer px-4 py-2 rounded-full bg-primary text-secondary border border-secondary font-medium shadow hover:bg-secondary hover:text-primary transition">
-                                <span className="material-symbols-rounded align-middle mr-1 text-lg"></span>
+        <div className="createPostPage min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center px-6 py-12">
+            <div className="max-w-5xl w-full bg-secondary rounded-2xl shadow-lg p-8">
+
+                {/* Page Title */}
+                <div className="border-b border-white/20 pb-4 mb-6">
+                    <h1 className="text-2xl font-bold text-white">Create a New Post</h1>
+                    <p className="text-sm text-white/70 mt-1">Fill out the form below to create a new blog post.</p>
+                </div>
+
+                <form className="space-y-8">
+                    {/* Section 1 - Cover Image */}
+                    <div>
+                        <label className="block text-sm font-medium text-white mb-2">
+                            Cover Image <span className="opacity-60">(optional)</span>
+                        </label>
+                        <div className="flex items-center gap-4">
+                            <label
+                                htmlFor="cover-image-upload"
+                                className="cursor-pointer px-4 py-2 rounded-lg bg-primary text-white border border-white/40 shadow-sm hover:bg-white hover:text-primary transition"
+                            >
                                 {coverImagePreview ? 'Change Image' : 'Upload Image'}
                             </label>
                             <input
@@ -150,61 +159,96 @@ function Create({ isAuthenticated }) {
                                 className="hidden"
                                 onChange={handleCoverImageChange}
                             />
-                            <span className="text-xs text-secondary">
+                            <span className="text-sm text-white/70">
                                 {coverImagePreview ? 'Image selected' : 'No file chosen'}
                             </span>
                         </div>
-                        {coverImageError && <div className="text-red-500 text-sm mt-1">{coverImageError}</div>}
+                        {coverImageError && (
+                            <p className="text-red-400 text-xs mt-1">{coverImageError}</p>
+                        )}
                         {coverImagePreview && (
-                            <img src={coverImagePreview} alt="Cover Preview" className="mt-2 w-full max-h-60 object-contain rounded-xl border border-secondary" />
+                            <img
+                                src={coverImagePreview}
+                                alt="Cover Preview"
+                                className="mt-3 w-full max-h-56 object-contain rounded-xl border border-white/30"
+                            />
                         )}
                     </div>
-                    <input
-                        type="text"
-                        placeholder="Title"
-                        className="w-full px-4 py-3 rounded-full bg-primary text-secondary placeholder:text-secondary border-none outline-none text-base transition focus:bg-secondary-hover"
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
-                    />
-                    <div>
-                        <label className="block text-secondary font-medium mb-1">Content</label>
-                        <div
-                            ref={editorRef}
-                            id="editor"
-                            className="w-full px-4 py-3 rounded-2xl bg-primary text-secondary border border-secondary focus-within:bg-secondary-hover min-h-[120px] transition"
-                            style={{ minHeight: 120, background: 'var(--primary-color)' }}
-                        />
+
+                    {/* Section 2 - Post Details */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Title */}
+                        <div>
+                            <label className="block text-sm font-medium text-white mb-2">Title</label>
+                            <input
+                                type="text"
+                                placeholder="Enter post title"
+                                className="w-full px-4 py-2.5 rounded-lg bg-primary text-white placeholder:text-white/60 border border-white/40 focus:border-white focus:ring-2 focus:ring-white/60 outline-none"
+                                value={title}
+                                onChange={e => setTitle(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Tags */}
+                        <div>
+                            <label className="block text-sm font-medium text-white mb-2">Tags</label>
+                            <input
+                                type="text"
+                                placeholder="Add tags (press space, enter, or comma)"
+                                className="w-full px-4 py-2.5 rounded-lg bg-primary text-white placeholder:text-white/60 border border-white/40 focus:border-white focus:ring-2 focus:ring-white/60 outline-none"
+                                value={tagInput}
+                                onChange={handleTagInput}
+                                onKeyDown={handleTagKeyDown}
+                                onBlur={handleTagBlur}
+                            />
+                        </div>
                     </div>
-                    {/* Tag display just above tag input */}
+
+                    {/* Tags Display */}
                     {tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-2">
+                        <div className="flex flex-wrap gap-2">
                             {tags.map((tag, idx) => (
-                                <span key={tag + idx} className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-sm font-medium shadow border border-secondary">
+                                <span
+                                    key={tag + idx}
+                                    className="inline-flex items-center bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium border border-white/40 shadow-sm"
+                                >
                                     #{tag}
-                                    <button type="button" className="ml-2 text-xs text-red-400 hover:text-red-600" onClick={() => removeTag(idx)}>&times;</button>
+                                    <button
+                                        type="button"
+                                        className="ml-2 text-xs text-red-400 hover:text-red-600"
+                                        onClick={() => removeTag(idx)}
+                                    >
+                                        &times;
+                                    </button>
                                 </span>
                             ))}
                         </div>
                     )}
-                    <input
-                        type="text"
-                        placeholder="Add tags (type and press space, enter, or comma)"
-                        className="w-full px-4 py-3 rounded-full bg-primary text-secondary placeholder:text-secondary border-none outline-none text-base transition focus:bg-secondary-hover"
-                        value={tagInput}
-                        onChange={handleTagInput}
-                        onKeyDown={handleTagKeyDown}
-                        onBlur={handleTagBlur}
-                    />
-                    <button
-                        onClick={createPost}
-                        type="submit"
-                        className="flex items-center justify-center mt-6 w-full h-14 rounded-full text-[1.2rem] bg-primary text-color shadow-lg hover:bg-secondary-hover transition font-semibold gap-2"
-                    >
-                        <span>Publish Post</span>
-                    </button>
+
+                    {/* Section 3 - Content */}
+                    <div>
+                        <label className="block text-sm font-medium text-white mb-2">Content</label>
+                        <div
+                            ref={editorRef}
+                            id="editor"
+                            className="w-full px-4 py-2.5 rounded-lg bg-primary text-white border border-white/40 focus-within:border-white focus-within:ring-2 focus-within:ring-white/60 min-h-[150px]"
+                        />
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="flex justify-end">
+                        <button
+                            onClick={createPost}
+                            type="submit"
+                            className="px-6 py-3 rounded-lg bg-primary text-white border border-white/40 font-semibold shadow-sm hover:bg-white hover:text-primary transition"
+                        >
+                            Publish Post
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
+
     );
 }
 

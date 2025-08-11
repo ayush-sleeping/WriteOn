@@ -65,7 +65,7 @@ function Home() {
         <div className="min-h-[calc(100vh-80px)] bg-primary flex flex-col items-center px-4 py-12">
             {/* --- Banner --- */}
             <div
-                className="w-full rounded-2xl relative py-32 px-6 mb-10 flex flex-col items-start justify-center shadow-lg overflow-hidden min-h-[440px] md:min-h-[600px]"
+                className="w-full rounded-2xl relative px-6 mb-10 flex items-center justify-center shadow-lg overflow-hidden min-h-[440px] md:min-h-[600px]"
                 style={posts.length > 0 && posts[0].coverImage ? {
                     backgroundImage: `url('${posts[0].coverImage}')`,
                     backgroundSize: 'cover',
@@ -75,10 +75,23 @@ function Home() {
                 }}
             >
                 {posts.length > 0 ? (
-                    <div className="mt-44">
-                        <h4 className="text-lg md:text-xl text-white mb-2 ml-8">Featured</h4>
-                        <h2 className="text-6xl md:text-6xl text-white mb-2 ml-8">{posts[0].title}</h2>
-                        <div className="text-lg md:text-xl text-gray-300 max-w-2xl prose prose-invert ml-8" dangerouslySetInnerHTML={{ __html: posts[0].content }} />
+                    <div className="flex w-full items-center justify-center">
+                        <div className="max-w-8xl w-full mx-auto bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl px-10 py-5 flex flex-col items-start" style={{ marginTop: '20rem' }}>
+                            <h4 className="text-lg md:text-xl text-white mb-3 font-semibold tracking-wide">Featured Blog</h4>
+                            <h2 className="text-5xl md:text-6xl text-white mb-5 font-extrabold leading-tight">{posts[0].title}</h2>
+                            <div className="text-lg md:text-xl text-gray-100 prose prose-invert mb-2">
+                                {(() => {
+                                    const maxWords = 30;
+                                    const tempDiv = document.createElement('div');
+                                    tempDiv.innerHTML = posts[0].content || '';
+                                    const plainText = tempDiv.textContent || tempDiv.innerText || '';
+                                    const words = plainText.split(/\s+/);
+                                    return words.length > maxWords
+                                        ? words.slice(0, maxWords).join(' ') + '...'
+                                        : plainText;
+                                })()}
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     <>
@@ -114,15 +127,36 @@ function Home() {
                                             </div>
                                         )}
                                         {/* --- Blog Title --- */}
-                                        <h2 className="text-2xl font-bold text-white mb-2">{post.title}</h2>
+                                        <h2 className="text-2xl font-bold text-white mb-2">
+                                            {(() => {
+                                                const maxWords = 3;
+                                                const words = (post.title || '').split(' ');
+                                                return words.length > maxWords
+                                                    ? words.slice(0, maxWords).join(' ') + '...'
+                                                    : post.title;
+                                            })()}
+                                        </h2>
                                         {/* --- Blog Content Preview --- */}
-                                        <div className="text-base text-secondary mb-4 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
+                                        <div
+                                            className="text-base text-secondary mb-4 max-w-none line-clamp-2 break-words overflow-hidden"
+                                        >
+                                            {(() => {
+                                                // Strip HTML tags and decode entities
+                                                const tempDiv = document.createElement('div');
+                                                tempDiv.innerHTML = post.content || '';
+                                                const plainText = tempDiv.textContent || tempDiv.innerText || '';
+                                                return plainText;
+                                            })()}
+                                        </div>
                                         {/* --- Blog Tags --- */}
                                         {Array.isArray(post.tags) && post.tags.length > 0 && (
                                             <div className="flex flex-wrap gap-2 mb-2">
-                                                {post.tags.map((tag, idx) => (
+                                                {post.tags.slice(0, 3).map((tag, idx) => (
                                                     <span key={tag + idx} className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow ">#{tag}</span>
                                                 ))}
+                                                {post.tags.length > 3 && (
+                                                    <span className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow">...</span>
+                                                )}
                                             </div>
                                         )}
                                         {/* --- Blog Author --- */}

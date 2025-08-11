@@ -15,7 +15,7 @@
 }
 
 .bg-secondary {
-    background-color: var(--secondary-color);
+    background-color: rgba(26, 26, 26, 0.9);
 }
 
 .bg-secondary-hover {
