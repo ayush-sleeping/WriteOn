@@ -1,0 +1,64 @@
+/* Modern Footer - Custom styles for unique layout */
+.footer-modern {
+    background: transparent;
+    padding: 60px 20px 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-modern-container {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 12px 30px;
+    max-width: 720px;
+    width: 100%;
+}
+
+.footer-modern-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.footer-modern-section h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.footer-modern-section p,
+.footer-modern-section a {
+    color: #999;
+    text-decoration: none;
+    margin-bottom: 8px;
+    display: block;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.footer-modern-section a:hover {
+    color: #fff;
+}
+
+.footer-modern-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .footer-modern-container {
+        margin: 0 10px;
+        padding: 30px 20px;
+    }
+    .footer-modern-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+    }
+}

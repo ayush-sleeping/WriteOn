@@ -1,0 +1,83 @@
+/* Header.css - Floating navbar styles */
+
+.floating-navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26, 26, 26, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 12px 30px;
+    border: 1px solid #333;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Additional styles for better responsive behavior */
+.floating-navbar-container {
+    width: 100%;
+    max-width: 1440px; /* or 1536px for 6xl, or remove for full width */
+    padding: 0 1rem;
+}
+
+/* Search input styling to match navbar */
+.search-input {
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid #333;
+}
+
+.search-input:focus {
+    border-color: #444;
+    background: rgba(26, 26, 26, 0.9);
+}
+
+/* Search icon styling to match border color */
+.search-icon {
+    color: #999;
+}
+
+/* Search dropdown styling to match navbar */
+.search-dropdown {
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid #333;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.search-dropdown-item {
+    border-bottom: 1px solid #333;
+}
+
+.search-dropdown-item:hover {
+    background: rgba(26, 26, 26, 0.7);
+}
+
+.search-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+/* Profile dropdown styling to match navbar */
+.profile-dropdown {
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid #333;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.profile-dropdown-item {
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid #333;
+}
+
+.profile-dropdown-item:hover {
+    background: rgba(26, 26, 26, 0.6);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .floating-navbar {
+        padding: 10px 20px;
+        top: 15px;
+    }
+}

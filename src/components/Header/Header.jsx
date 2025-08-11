@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Logo from '/src/assets/writeon_logo.png';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase-config';
+import './Header.css';
 
 
 function Header({ setIsAuthenticated }) {
@@ -10,10 +11,12 @@ function Header({ setIsAuthenticated }) {
     const isAuthenticated = localStorage.getItem("isAuth") === "true";
     const [profilePhoto, setProfilePhoto] = useState(auth.currentUser?.photoURL);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
     const profileDropdownRef = useRef(null);
 
     // --- Navigation ---
     const navigate = useNavigate();
+    const location = useLocation();
 
     // --- Search State ---
     const [search, setSearch] = useState("");
@@ -52,7 +55,21 @@ function Header({ setIsAuthenticated }) {
             document.removeEventListener('mousedown', handleClickOutsideProfile);
         };
     }, [showProfileDropdown]);
-    // ...existing code...
+
+    // --- Close mobile menu on outside click ---
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (showMobileMenu && !event.target.closest('.navbar')) {
+                setShowMobileMenu(false);
+            }
+        }
+        if (showMobileMenu) {
+            document.addEventListener('click', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [showMobileMenu]);
 
     // --- Search logic ---
     const handleSearch = async (e) => {
@@ -105,57 +122,53 @@ function Header({ setIsAuthenticated }) {
 
     // --- Render ---
     return (
-        <header className="bg-primary sticky top-0 z-50">
-            <div className="max-w-8xl mx-auto flex items-center justify-between px-4 py-3">
-                {/* --- Left: Logo and Search --- */}
-                <div className="flex items-center gap-4 flex-shrink-0">
-                    <Link to="/">
-                        <img src={Logo} alt="WriteOn Logo" className="h-11 w-24 border-6 border-black shadow-sm hover:opacity-80 transition" />
+        <nav className="floating-navbar-container">
+            <div className="floating-navbar max-w-6xl mx-auto">
+                <div className="flex items-center justify-between gap-4">
+                    {/* --- Left: Logo --- */}
+                    <Link to="/" className="text-white text-xl font-bold hover:opacity-80 transition flex-shrink-0">
+                        WriteOn
                     </Link>
-                    {/* --- Search Bar --- */}
-                    <div className="relative flex items-center w-[420px] md:w-[600px]">
+
+                    {/* --- Center: Search (Desktop) --- */}
+                    <div className="hidden lg:flex relative flex-1 max-w-md mx-6">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                            <svg className="h-5 w-5 text-secondary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="search-icon h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" fill="none" />
                                 <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                             </svg>
                         </span>
-                        {/* --- Search Input --- */}
                         <input
                             type="text"
                             placeholder="Search..."
-                            required
                             value={search}
                             onChange={handleSearch}
-                            className="w-full h-12 pl-12 pr-14 rounded-full bg-secondary focus:bg-secondary-hover text-color placeholder:text-secondary border-none outline-none text-base transition"
+                            className="search-input w-full h-10 pl-12 pr-10 rounded-full text-white placeholder:text-gray-400 outline-none text-sm transition"
                             autoComplete="off"
                             onFocus={() => { if (results.length > 0) setShowDropdown(true); }}
                         />
-                        {/* --- Clear Search Button --- */}
                         {search && (
                             <button
                                 type="button"
-                                aria-label="Clear search"
-                                className="absolute right-12 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary/60 transition"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-700 transition"
                                 onClick={() => { setSearch(""); setResults([]); setShowDropdown(false); }}
-                                tabIndex={0}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-gray-400">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         )}
-                        {/* --- Search Results Dropdown --- */}
+                        {/* Search Results Dropdown */}
                         {showDropdown && results.length > 0 && (
-                            <div ref={dropdownRef} className="absolute left-0 top-14 w-full bg-secondary text-secondary rounded-xl shadow-lg z-50 max-h-80 overflow-y-auto">
+                            <div ref={dropdownRef} className="search-dropdown absolute left-0 top-12 w-full rounded-xl z-50 max-h-80 overflow-y-auto">
                                 {results.map(post => (
                                     <div
                                         key={post.id}
-                                        className="px-5 py-3 cursor-pointer hover:bg-black text-left transition-colors"
+                                        className="search-dropdown-item px-4 py-3 cursor-pointer text-left transition-colors"
                                         onClick={() => handleResultClick(post.id)}
                                     >
-                                        <div className="font-semibold text-primary text-base line-clamp-1">{post.title}</div>
-                                        <div className="text-xs text-secondary">
+                                        <div className="font-semibold text-white text-sm line-clamp-1">{post.title}</div>
+                                        <div className="text-xs text-gray-400">
                                             {post.createdAt
                                                 ? (() => {
                                                     const d = typeof post.createdAt === "object" && post.createdAt.seconds
@@ -167,57 +180,72 @@ function Header({ setIsAuthenticated }) {
                                         </div>
                                     </div>
                                 ))}
-                                {results.length === 0 && (
-                                    <div className="px-5 py-3 text-secondary text-sm">No results found.</div>
-                                )}
                             </div>
                         )}
-                        {/* --- Send Message Button (placeholder) --- */}
-                        <button
-                            id="send-message-button"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-[#a3a3a3] transition"
-                            type="button"
-                        >
-                        </button>
                     </div>
-                </div>
-                {/* --- Right: Auth Buttons & Profile --- */}
-                <div className="flex items-center gap-3">
-                    {isAuthenticated && (
-                        <>
-                            {/* --- Create Blog Button --- */}
-                            <Link to="/create">
-                                <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Create</button>
+
+                    {/* --- Right: Navigation & Auth --- */}
+                    <div className="hidden lg:flex items-center gap-6">
+                        {/* Navigation Links */}
+                        <div className="flex items-center gap-6">
+                            <Link
+                                to="/"
+                                className={`text-sm transition-all duration-300 ${location.pathname === '/' ? 'text-white' : 'text-gray-300 hover:text-white'
+                                    }`}
+                            >
+                                Home
                             </Link>
-                            {/* --- Profile Dropdown --- */}
+                            <Link
+                                to="/about"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-gray-300 hover:text-white transition-all duration-300"
+                            >
+                                About
+                            </Link>
+                            <Link
+                                to="/contact"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-gray-300 hover:text-white transition-all duration-300"
+                            >
+                                Contact
+                            </Link>
+                            {isAuthenticated && (
+                                <Link
+                                    to="/create"
+                                    className="px-4 py-2 rounded-full text-sm text-gray-300 border primary-border hover:text-white hover:border-white-500 transition-all"
+                                >
+                                    Create
+                                </Link>
+                            )}
+                        </div>
+
+                        {/* Auth Section */}
+                        {isAuthenticated ? (
                             <div className="relative">
                                 <button
                                     type="button"
                                     onClick={() => setShowProfileDropdown(v => !v)}
                                     className="focus:outline-none"
-                                    aria-haspopup="true"
-                                    aria-expanded={showProfileDropdown}
                                 >
                                     <img
-                                        key={auth.currentUser?.photoURL || auth.currentUser?.uid || 'default'}
                                         src={auth.currentUser?.photoURL && auth.currentUser.photoURL.trim() !== ''
                                             ? auth.currentUser.photoURL
-                                            : (auth.currentUser ? "https://randomuser.me/api/portraits/men/32.jpg" : undefined)}
+                                            : "https://randomuser.me/api/portraits/men/32.jpg"}
                                         alt="Profile"
-                                        className="w-10 h-10 rounded-full object-cover border-2 shadow-sm hover:opacity-80 transition"
-                                        style={{ borderColor: 'var(--secondary-color)' }}
+                                        className="w-8 h-8 rounded-full object-cover border-2 border-gray-600 hover:border-gray-500 transition"
                                     />
                                 </button>
-                                {/* --- Profile Dropdown Content --- */}
                                 {showProfileDropdown && (
-                                    <div ref={profileDropdownRef} className="absolute right-0 mt-2 w-56 bg-secondary text-secondary rounded-xl shadow-lg z-50 p-4 text-left">
-                                        <div className="font-semibold text-primary text-base mb-1">{auth.currentUser?.displayName || 'User'}</div>
-                                        <div className="text-xs text-secondary break-all mb-4">{auth.currentUser?.email}</div>
-                                        <div className="w-full px-4 py-2 rounded-md font-medium mb-2 cursor-pointer select-none bg-primary hover:bg-secondary text-primary hover:text-secondary transition-colors">
+                                    <div ref={profileDropdownRef} className="profile-dropdown absolute right-0 mt-2 w-56 text-white rounded-xl z-50 p-4">
+                                        <div className="font-semibold text-white text-sm mb-1">{auth.currentUser?.displayName || 'User'}</div>
+                                        <div className="text-xs text-gray-400 break-all mb-4">{auth.currentUser?.email}</div>
+                                        <div className="profile-dropdown-item w-full px-3 py-2 rounded-md text-sm font-medium mb-2 cursor-pointer text-white transition-colors">
                                             Your Blogs
                                         </div>
                                         <button
-                                            className="w-full px-4 py-2 rounded-md font-medium text-left cursor-pointer bg-primary text-secondary hover:bg-secondary hover:text-primary transition-colors"
+                                            className="profile-dropdown-item w-full px-3 py-2 rounded-md text-sm font-medium text-left cursor-pointer text-white hover:bg-red-600 transition-colors"
                                             onClick={() => { setShowProfileDropdown(false); signUserOut(); }}
                                         >
                                             Log out
@@ -225,17 +253,135 @@ function Header({ setIsAuthenticated }) {
                                     </div>
                                 )}
                             </div>
-                        </>
-                    )}
-                    {/* --- Login Button (if not authenticated) --- */}
-                    {!isAuthenticated && (
-                        <Link to="/login">
-                            <button className="px-4 py-2 rounded-md bg-secondary text-secondary hover:!text-white font-medium transition-colors">Log in</button>
-                        </Link>
-                    )}
+                        ) : (
+                            <div className="flex gap-3">
+                                <Link to="/login">
+                                    <button className="px-4 py-2 rounded-full text-sm text-gray-300 border border-gray-600 hover:text-white hover:border-gray-500 transition-all">
+                                        Login
+                                    </button>
+                                </Link>
+                                <Link to="/login">
+                                    <button className="px-4 py-2 rounded-full text-sm bg-white text-black hover:bg-gray-100 transition-all">
+                                        Sign Up
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* --- Mobile Menu Toggle --- */}
+                    <button
+                        className="lg:hidden text-white text-xl focus:outline-none"
+                        onClick={() => setShowMobileMenu(!showMobileMenu)}
+                    >
+                        ☰
+                    </button>
                 </div>
+
+                {/* --- Mobile Menu --- */}
+                {showMobileMenu && (
+                    <div className="lg:hidden mt-4 pt-4 border-t border-gray-700">
+                        {/* Mobile Search */}
+                        <div className="relative mb-4">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+                                <svg className="search-icon h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" fill="none" />
+                                    <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                </svg>
+                            </span>
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={search}
+                                onChange={handleSearch}
+                                className="search-input w-full h-9 pl-10 pr-8 rounded-full text-white placeholder:text-gray-400 outline-none text-sm"
+                                autoComplete="off"
+                            />
+                            {search && (
+                                <button
+                                    type="button"
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full hover:bg-gray-700 transition"
+                                    onClick={() => { setSearch(""); setResults([]); setShowDropdown(false); }}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3 text-gray-400">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
+
+                        <ul className="flex flex-col gap-3">
+                            <li>
+                                <Link
+                                    to="/"
+                                    className="block text-gray-300 hover:text-white transition text-sm"
+                                    onClick={() => setShowMobileMenu(false)}
+                                >
+                                    Home
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/about"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block text-gray-300 hover:text-white transition text-sm"
+                                    onClick={() => setShowMobileMenu(false)}
+                                >
+                                    About
+                                </Link>
+                            </li>
+                            {isAuthenticated && (
+                                <li>
+                                    <Link
+                                        to="/create"
+                                        className="block text-gray-300 hover:text-white transition text-sm"
+                                        onClick={() => setShowMobileMenu(false)}
+                                    >
+                                        Create
+                                    </Link>
+                                </li>
+                            )}
+                            <li>
+                                <Link
+                                    to="/contact"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block text-gray-300 hover:text-white transition text-sm"
+                                    onClick={() => setShowMobileMenu(false)}
+                                >
+                                    Contact
+                                </Link>
+                            </li>
+                            {!isAuthenticated && (
+                                <li className="flex flex-col gap-2 pt-2">
+                                    <Link to="/login" onClick={() => setShowMobileMenu(false)}>
+                                        <button className="w-full px-3 py-2 rounded-full text-sm text-gray-300 border border-gray-600 hover:text-white hover:border-gray-500 transition">
+                                            Login
+                                        </button>
+                                    </Link>
+                                    <Link to="/login" onClick={() => setShowMobileMenu(false)}>
+                                        <button className="w-full px-3 py-2 rounded-full text-sm bg-white text-black hover:bg-gray-100 transition">
+                                            Sign Up
+                                        </button>
+                                    </Link>
+                                </li>
+                            )}
+                            {isAuthenticated && (
+                                <li className="pt-2">
+                                    <button
+                                        className="w-full px-3 py-2 rounded-full bg-red-600 text-white hover:bg-red-700 text-sm transition text-left"
+                                        onClick={() => { setShowMobileMenu(false); signUserOut(); }}
+                                    >
+                                        Log out
+                                    </button>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                )}
             </div>
-        </header>
+        </nav>
     );
 }
 

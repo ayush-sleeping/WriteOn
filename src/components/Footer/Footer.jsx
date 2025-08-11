@@ -1,46 +1,47 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Footer.css';
 
 function Footer() {
     return (
-        <footer className="footer-main">
-            {/* Gradient overlay */}
-            <div className="footer-gradient" />
-            {/* Blur backdrop */}
-            <div className="footer-blur" />
-            <div className="footer-content">
-                {/* Col 1 */}
-                <div className="col flex flex-col items-start w-full md:w-1/3 mb-8 md:mb-0">
-                    <h3 className="text-2xl font-bold title mb-2">WriteOn</h3>
-                    <p className="text-secondary mb-2">Made with <span className="text-[#BA6573]">❤</span> by Ayush</p>
-                    <p className="text-[#818181] text-xs">2025 © All Rights Reserved</p>
+        <footer className="footer-modern">
+            <div className="footer-modern-container">
+                <div className="footer-modern-content">
+                    {/* Company Section */}
+                    <div className="footer-modern-section">
+                        <Link to="/" target="_blank" rel="noopener noreferrer" className="">Home</Link>
+                        <Link to="/about" target="_blank" rel="noopener noreferrer" className="">About Us</Link>
+                        <Link to="/contact" target="_blank" rel="noopener noreferrer" className="">Contact</Link>
+                        <Link to="/code-of-conduct" target="_blank" rel="noopener noreferrer" className="">Code fo Conduct</Link>
+                    </div>
+                    {/* Quick Links Section */}
+                    <div className="footer-modern-section">
+                        <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer" className="">Privacy</Link>
+                        <Link to="/terms-of-use" target="_blank" rel="noopener noreferrer" className="">Terms</Link>
+
+                        {localStorage.getItem("isAuth") === "true" ? (
+                            <>
+                                <Link to="/create" target="_blank" rel="noopener noreferrer" className="">
+                                    Write
+                                </Link>
+                                <Link to="/myblogs" target="_blank" rel="noopener noreferrer" className="">
+                                    My Blogs
+                                </Link>
+                            </>
+                        ) : (
+                            <Link to="/login" target="_blank" rel="noopener noreferrer" className="">
+                                Login
+                            </Link>
+                        )}
+                    </div>
+                    {/* Connect Section */}
+                    <div className="footer-modern-section">
+                        <a href="mailto:hello@company.com">hello@writeon.com</a>
+                        <a href="#">Follow Us</a>
+                    </div>
                 </div>
-                {/* Col 2: About Navigation */}
-                <div className="col2 footer-box mb-8 md:mb-0">
-                    <p className="text-white font-semibold mb-2">About</p>
-                    <Link to="/about" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Our mission</Link>
-                    <Link to="/privacy" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Privacy Policy</Link>
-                    <Link to="/terms" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Terms of service</Link>
-                </div>
-                {/* Col 3: Blog Navigation */}
-                <div className="col3 footer-box">
-                    <p className="text-white font-semibold mb-2">Blog</p>
-                    {localStorage.getItem("isAuth") === "true" ? (
-                        <>
-                            <Link to="/create" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Write a Blog</Link>
-                            <Link to="/myblogs" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">My Blogs</Link>
-                        </>
-                    ) : (
-                        <Link to="/login" className="text-secondary mb-1 cursor-pointer hover:text-white transition block">Log In</Link>
-                    )}
-                    <a
-                        href="https://github.com/ayush-sleeping/WriteOn"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-secondary mb-1 cursor-pointer hover:text-white transition block"
-                    >
-                        FAQ / Help
-                    </a>
+                <div className="footer-modern-bottom">
+                    <p>&copy; 2025 WriteOn. All rights reserved.</p>
                 </div>
             </div>
         </footer>

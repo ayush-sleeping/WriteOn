@@ -26,20 +26,22 @@ function App() {
     return (
         <>
             <ScrollToTop />
-            <div className='app'>
+            <div className='app bg-black'>
                 <Header />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-                    <Route path="/create" element={<Create isAuthenticated={isAuthenticated} />} />
-                    <Route path="/update/:id" element={<Update isAuthenticated={isAuthenticated} />} />
-                    <Route path="/blog/:id" element={<Blog />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/code-of-conduct" element={<CodeOfConduct />} />
-                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                    <Route path="/terms-of-use" element={<TermsOfUse />} />
-                </Routes>
+                <div className="pt-20 bg-black">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                        <Route path="/create" element={<Create isAuthenticated={isAuthenticated} />} />
+                        <Route path="/update/:id" element={<Update isAuthenticated={isAuthenticated} />} />
+                        <Route path="/blog/:id" element={<Blog />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/code-of-conduct" element={<CodeOfConduct />} />
+                        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                        <Route path="/terms-of-use" element={<TermsOfUse />} />
+                    </Routes>
+                </div>
                 <Footer />
             </div>
         </>
