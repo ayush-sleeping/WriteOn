@@ -63,6 +63,32 @@ function Home() {
 
     return (
         <div className="min-h-[calc(100vh-80px)] bg-primary flex flex-col items-center px-4 py-12">
+            {/* --- Banner --- */}
+            <div
+                className="w-full rounded-2xl relative py-32 px-6 mb-10 flex flex-col items-start justify-center shadow-lg overflow-hidden min-h-[440px] md:min-h-[600px]"
+                style={posts.length > 0 && posts[0].coverImage ? {
+                    backgroundImage: `url('${posts[0].coverImage}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                } : {
+                    background: 'linear-gradient(to right, #1e3a8a, #000, #6d28d9)'
+                }}
+            >
+                {posts.length > 0 ? (
+                    <div className="mt-44">
+                        <h4 className="text-lg md:text-xl text-white mb-2 ml-8">Featured</h4>
+                        <h2 className="text-6xl md:text-6xl text-white mb-2 ml-8">{posts[0].title}</h2>
+                        <div className="text-lg md:text-xl text-gray-300 max-w-2xl prose prose-invert ml-8" dangerouslySetInnerHTML={{ __html: posts[0].content }} />
+                    </div>
+                ) : (
+                    <>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2">Welcome to WriteOn</h2>
+                        <p className="text-lg md:text-xl text-gray-300 max-w-2xl">Share your thoughts, read inspiring stories, and connect with a community of writers. Start your blogging journey today!</p>
+                    </>
+                )}
+            </div>
+            {/* --- Section Title --- */}
+            <h1 className="w-full text-xl font-semibold text-white mb-6 text-left ml-8">Recent Blog Posts</h1>
             {/* --- Main Content Row: Hero, Blog List, and Active Discussions Side by Side --- */}
             <div className="w-full flex flex-col lg:flex-row gap-12 items-start justify-center">
                 {/* --- Blog Posts List --- */}
