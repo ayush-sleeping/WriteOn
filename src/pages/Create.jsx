@@ -231,7 +231,7 @@ function Create({ isAuthenticated }) {
                         <div
                             ref={editorRef}
                             id="editor"
-                            className="w-full px-4 py-2.5 rounded-lg bg-primary text-white border border-white/40 focus-within:border-white focus-within:ring-2 focus-within:ring-white/60 min-h-[150px]"
+                            className="w-full px-4 py-2.5 rounded-lg bg-primary text-white border border-white/40 focus-within:border-white focus-within:ring-2 focus-within:ring-white/60 min-h-[280px]"
                         />
                     </div>
 

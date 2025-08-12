@@ -1,5 +1,6 @@
 // --- Imports ---
 import React, { useEffect, useState, useCallback } from 'react';
+import formula1Img from '../assets/formula1.png';
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase-config';
 import { Link } from 'react-router-dom';
@@ -64,6 +65,7 @@ function Home() {
     return (
         <div className="min-h-[calc(100vh-80px)] bg-primary flex flex-col items-center px-4 py-12">
             {/* --- Banner --- */}
+            {/* ----------------------------------------------------------------------------- */}
             <div
                 className="w-full rounded-2xl relative px-6 mb-10 flex items-center justify-center shadow-lg overflow-hidden min-h-[440px] md:min-h-[600px]"
                 style={posts.length > 0 && posts[0].coverImage ? {
@@ -71,14 +73,24 @@ function Home() {
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 } : {
-                    background: 'linear-gradient(to right, #1e3a8a, #000, #6d28d9)'
+                    backgroundImage: `url(${formula1Img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                 }}
             >
                 {posts.length > 0 ? (
                     <div className="flex w-full items-center justify-center">
                         <div className="max-w-8xl w-full mx-auto bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl px-10 py-5 flex flex-col items-start" style={{ marginTop: '20rem' }}>
                             <h4 className="text-lg md:text-xl text-white mb-3 font-semibold tracking-wide">Featured Blog</h4>
-                            <h2 className="text-5xl md:text-6xl text-white mb-5 font-extrabold leading-tight">{posts[0].title}</h2>
+                            <h2 className="text-5xl md:text-6xl text-white mb-5 font-extrabold leading-tight">
+                                {(() => {
+                                    const maxWords = 5;
+                                    const words = (posts[0].title || '').split(' ');
+                                    return words.length > maxWords
+                                        ? words.slice(0, maxWords).join(' ') + '...'
+                                        : posts[0].title;
+                                })()}
+                            </h2>
                             <div className="text-lg md:text-xl text-gray-100 prose prose-invert mb-2">
                                 {(() => {
                                     const maxWords = 30;
@@ -94,13 +106,21 @@ function Home() {
                         </div>
                     </div>
                 ) : (
-                    <>
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2">Welcome to WriteOn</h2>
-                        <p className="text-lg md:text-xl text-gray-300 max-w-2xl">Share your thoughts, read inspiring stories, and connect with a community of writers. Start your blogging journey today!</p>
-                    </>
+                    <div className="flex w-full items-center justify-center">
+                        <div className="max-w-8xl w-full mx-auto bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl px-10 py-5 flex flex-col items-start" style={{ marginTop: '20rem' }}>
+                            <h4 className="text-lg md:text-xl text-white mb-3 font-semibold tracking-wide">Featured Blog</h4>
+                            <h2 className="text-5xl md:text-6xl text-white mb-5 font-extrabold leading-tight">Welcome to WriteOn</h2>
+                            <div className="text-lg md:text-xl text-gray-100 prose prose-invert mb-2">
+                                Share your thoughts, read inspiring stories, and connect with a community of writers. Start your blogging journey today!
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
+
+
             {/* --- Section Title --- */}
+            {/* ----------------------------------------------------------------------------- */}
             <h1 className="w-full text-xl font-semibold text-white mb-6 text-left ml-8">Recent Blog Posts</h1>
             {/* --- Main Content Row: Hero, Blog List, and Active Discussions Side by Side --- */}
             <div className="w-full flex flex-col lg:flex-row gap-12 items-start justify-center">
@@ -189,6 +209,7 @@ function Home() {
                     )}
                 </div>
             </div>
+
 
             {/* --- Delete Confirmation Modal --- */}
             {/* ----------------------------------------------------------------------------- */}
