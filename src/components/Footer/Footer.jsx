@@ -9,27 +9,27 @@ function Footer() {
                 <div className="footer-modern-content">
                     {/* Company Section */}
                     <div className="footer-modern-section">
-                        <Link to="/" target="_blank" rel="noopener noreferrer" className="">Home</Link>
-                        <Link to="/about" target="_blank" rel="noopener noreferrer" className="">About Us</Link>
-                        <Link to="/contact" target="_blank" rel="noopener noreferrer" className="">Contact</Link>
-                        <Link to="/code-of-conduct" target="_blank" rel="noopener noreferrer" className="">Code fo Conduct</Link>
+                        <Link to="/" className="">Home</Link>
+                        <Link to="/about" className="">About Us</Link>
+                        <Link to="/contact" className="">Contact</Link>
+                        <Link to="/code-of-conduct" className="">Code fo Conduct</Link>
                     </div>
                     {/* Quick Links Section */}
                     <div className="footer-modern-section">
-                        <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer" className="">Privacy</Link>
-                        <Link to="/terms-of-use" target="_blank" rel="noopener noreferrer" className="">Terms</Link>
+                        <Link to="/privacy-policy" className="">Privacy</Link>
+                        <Link to="/terms-of-use" className="">Terms</Link>
 
                         {localStorage.getItem("isAuth") === "true" ? (
                             <>
-                                <Link to="/create" target="_blank" rel="noopener noreferrer" className="">
+                                <Link to="/create" className="">
                                     Write
                                 </Link>
-                                <Link to="/myblogs" target="_blank" rel="noopener noreferrer" className="">
+                                <Link to="/myblogs" className="">
                                     My Blogs
                                 </Link>
                             </>
                         ) : (
-                            <Link to="/login" target="_blank" rel="noopener noreferrer" className="">
+                            <Link to="/login" className="">
                                 Login
                             </Link>
                         )}
