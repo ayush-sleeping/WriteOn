@@ -1,3 +1,7 @@
+/* Force all blog content text to white, even if inline styles are present */
+.blog-content-white, .blog-content-white * {
+  color: #fff !important;
+}
 @import "tailwindcss";
 
 :root {

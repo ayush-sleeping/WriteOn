@@ -8,7 +8,9 @@ import { FiHome, FiInfo, FiMail, FiShield, FiUser, FiFileText } from 'react-icon
 
 function Home() {
     // --- State ---
-    const [posts, setPosts] = useState([]); // All blog posts
+    const [allPosts, setAllPosts] = useState([]); // All blog posts from Firestore
+    const [posts, setPosts] = useState([]); // Currently displayed blogs
+    const [visibleCount, setVisibleCount] = useState(9); // Number of blogs to show
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
     const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete modal visibility
@@ -22,7 +24,9 @@ function Home() {
             const postsRef = collection(db, 'posts');
             const postsQuery = query(postsRef, orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(postsQuery);
-            setPosts(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            const all = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+            setAllPosts(all);
+            setPosts(all.slice(0, 9));
         } catch (err) {
             setError('Failed to load posts. Please try again later.');
         } finally {
@@ -34,6 +38,13 @@ function Home() {
     useEffect(() => {
         fetchPosts();
     }, [fetchPosts]);
+
+    // Load more handler
+    const handleLoadMore = () => {
+        const newCount = visibleCount + 9;
+        setVisibleCount(newCount);
+        setPosts(allPosts.slice(0, newCount));
+    };
 
 
     // --- Delete Modal Handlers ---
@@ -133,82 +144,97 @@ function Home() {
                     ) : posts.length === 0 ? (
                         <div className="text-secondary text-lg text-center">No posts yet. Be the first to create one!</div>
                     ) : (
-                        posts.map(post => {
-                            // --- Check if current user is the author ---
-                            const isAuthor = post.author?.id && currentUserId && post.author.id === currentUserId;
-                            return (
-                                <div key={post.id} className="relative group">
-                                    {/* --- Blog Card --- */}
-                                    <Link to={`/blog/${post.id}`} className="block bg-primary rounded-2xl shadow-md p-4 text-left hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary">
-                                        {/* --- Blog Cover Image --- */}
-                                        {post.coverImage && (
-                                            <div className="mb-4 w-full aspect-[16/9] overflow-hidden rounded-xl border border-secondary flex items-center justify-center bg-black">
-                                                <img src={post.coverImage} alt="Cover" className="w-full h-full object-cover" />
+                        <>
+                            {posts.map(post => {
+                                // --- Check if current user is the author ---
+                                const isAuthor = post.author?.id && currentUserId && post.author.id === currentUserId;
+                                return (
+                                    <div key={post.id} className="relative group">
+                                        {/* --- Blog Card --- */}
+                                        <Link to={`/blog/${post.id}`} className="block bg-primary rounded-2xl shadow-md p-4 text-left hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary">
+                                            {/* --- Blog Cover Image --- */}
+                                            {post.coverImage && (
+                                                <div className="mb-4 w-full aspect-[16/9] overflow-hidden rounded-xl border border-secondary flex items-center justify-center bg-black">
+                                                    <img src={post.coverImage} alt="Cover" className="w-full h-full object-cover" />
+                                                </div>
+                                            )}
+                                            {/* --- Blog Title --- */}
+                                            <h2 className="text-2xl font-bold text-white mb-2">
+                                                {(() => {
+                                                    const maxWords = 3;
+                                                    const words = (post.title || '').split(' ');
+                                                    return words.length > maxWords
+                                                        ? words.slice(0, maxWords).join(' ') + '...'
+                                                        : post.title;
+                                                })()}
+                                            </h2>
+                                            {/* --- Blog Content Preview --- */}
+                                            <div
+                                                className="text-base text-secondary mb-4 max-w-none line-clamp-2 break-words overflow-hidden"
+                                            >
+                                                {(() => {
+                                                    // Strip HTML tags and decode entities
+                                                    const tempDiv = document.createElement('div');
+                                                    tempDiv.innerHTML = post.content || '';
+                                                    const plainText = tempDiv.textContent || tempDiv.innerText || '';
+                                                    return plainText;
+                                                })()}
+                                            </div>
+                                            {/* --- Blog Tags --- */}
+                                            {Array.isArray(post.tags) && post.tags.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 mb-2">
+                                                    {post.tags.slice(0, 3).map((tag, idx) => (
+                                                        <span key={tag + idx} className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow ">#{tag}</span>
+                                                    ))}
+                                                    {post.tags.length > 3 && (
+                                                        <span className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow">...</span>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {/* --- Blog Author --- */}
+                                            <div className="flex items-center gap-2 text-sm text-gray-400">
+                                                <span>By {post.author?.name || 'Unknown'}</span>
+                                            </div>
+                                        </Link>
+                                        {/* --- Author Controls (Delete/Update) --- */}
+                                        {isAuthor && (
+                                            <div className="absolute top-6 right-6 flex gap-2 z-10">
+                                                <button
+                                                    onClick={e => { e.preventDefault(); openDeleteModal(post.id); }}
+                                                    className="px-3 py-1 rounded-full bg-black text-white text-xs font-semibold shadow transition duration-200 hover:bg-white hover:text-black hover:border-white"
+                                                    title="Delete this post"
+                                                >
+                                                    Delete
+                                                </button>
+                                                <Link
+                                                    to={`/update/${post.id}`}
+                                                    className="px-3 py-1 rounded-full bg-black text-white text-xs font-semibold shadow transition duration-200 hover:bg-white hover:text-black hover:border-white"
+                                                    onClick={e => e.stopPropagation()}
+                                                >
+                                                    Update
+                                                </Link>
                                             </div>
                                         )}
-                                        {/* --- Blog Title --- */}
-                                        <h2 className="text-2xl font-bold text-white mb-2">
-                                            {(() => {
-                                                const maxWords = 3;
-                                                const words = (post.title || '').split(' ');
-                                                return words.length > maxWords
-                                                    ? words.slice(0, maxWords).join(' ') + '...'
-                                                    : post.title;
-                                            })()}
-                                        </h2>
-                                        {/* --- Blog Content Preview --- */}
-                                        <div
-                                            className="text-base text-secondary mb-4 max-w-none line-clamp-2 break-words overflow-hidden"
-                                        >
-                                            {(() => {
-                                                // Strip HTML tags and decode entities
-                                                const tempDiv = document.createElement('div');
-                                                tempDiv.innerHTML = post.content || '';
-                                                const plainText = tempDiv.textContent || tempDiv.innerText || '';
-                                                return plainText;
-                                            })()}
-                                        </div>
-                                        {/* --- Blog Tags --- */}
-                                        {Array.isArray(post.tags) && post.tags.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mb-2">
-                                                {post.tags.slice(0, 3).map((tag, idx) => (
-                                                    <span key={tag + idx} className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow ">#{tag}</span>
-                                                ))}
-                                                {post.tags.length > 3 && (
-                                                    <span className="inline-flex items-center bg-primary text-secondary px-3 py-1 rounded-full text-xs font-medium shadow">...</span>
-                                                )}
-                                            </div>
-                                        )}
-                                        {/* --- Blog Author --- */}
-                                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                                            <span>By {post.author?.name || 'Unknown'}</span>
-                                        </div>
-                                    </Link>
-                                    {/* --- Author Controls (Delete/Update) --- */}
-                                    {isAuthor && (
-                                        <div className="absolute top-6 right-6 flex gap-2 z-10">
-                                            <button
-                                                onClick={e => { e.preventDefault(); openDeleteModal(post.id); }}
-                                                className="px-3 py-1 rounded-full bg-black text-white text-xs font-semibold shadow transition duration-200 hover:bg-white hover:text-black hover:border-white"
-                                                title="Delete this post"
-                                            >
-                                                Delete
-                                            </button>
-                                            <Link
-                                                to={`/update/${post.id}`}
-                                                className="px-3 py-1 rounded-full bg-black text-white text-xs font-semibold shadow transition duration-200 hover:bg-white hover:text-black hover:border-white"
-                                                onClick={e => e.stopPropagation()}
-                                            >
-                                                Update
-                                            </Link>
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })
+                                    </div>
+                                );
+                            })}
+                        </>
                     )}
                 </div>
             </div>
+            {/* Load More Button */}
+            {posts.length < allPosts.length && (
+                <div className="flex w-full mt-8">
+                    <div className="mx-auto">
+                        <button
+                            onClick={handleLoadMore}
+                            className="px-6 py-3 rounded-full bg-secondary text-white font-semibold shadow hover:bg-primary hover:text-secondary transition"
+                        >
+                            Load More ...
+                        </button>
+                    </div>
+                </div>
+            )}
 
 
             {/* --- Delete Confirmation Modal --- */}
