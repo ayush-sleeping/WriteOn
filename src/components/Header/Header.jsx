@@ -257,16 +257,12 @@ function Header({ setIsAuthenticated }) {
                             </Link>
                             <Link
                                 to="/about"
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 className="text-sm text-gray-300 hover:text-white transition-all duration-300"
                             >
                                 About
                             </Link>
                             <Link
                                 to="/contact"
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 className="text-sm text-gray-300 hover:text-white transition-all duration-300"
                             >
                                 Contact
@@ -361,8 +357,6 @@ function Header({ setIsAuthenticated }) {
                             <li>
                                 <Link
                                     to="/about"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
                                     onClick={() => setShowMobileMenu(false)}
                                 >
                                     About
@@ -381,8 +375,6 @@ function Header({ setIsAuthenticated }) {
                             <li>
                                 <Link
                                     to="/contact"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
                                     onClick={() => setShowMobileMenu(false)}
                                 >
                                     Contact
