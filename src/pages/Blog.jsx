@@ -54,10 +54,10 @@ function Blog() {
 
     return (
         <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-8xl bg-secondary rounded-3xl shadow-2xl p-0 flex flex-row overflow-hidden">
+            <div className="w-full max-w-8xl bg-secondary rounded-3xl shadow-2xl p-0 flex flex-col lg:flex-row overflow-hidden">
                 {/* Author Section */}
                 {/* ----------------------------------------------------------------------------- */}
-                <div className="flex flex-col justify-start w-1/6 min-w-[120px] bg-primary/80 p-6 border-r border-secondary">
+                <div className="flex flex-col justify-start w-full lg:w-1/6 min-w-[120px] bg-primary/80 p-6 border-b lg:border-b-0 lg:border-r border-secondary">
                     <div className="w-full bg-black rounded-xl shadow-lg p-4 flex flex-col">
                         <h3 className="text-lg text-white mb-2">Author</h3>
                         <span className="text-xl text-white font-bold">{post.author?.name || 'Unknown'}</span>
@@ -76,10 +76,9 @@ function Blog() {
                     </div>
                 </div>
 
-
                 {/* Blog Section */}
                 {/* ----------------------------------------------------------------------------- */}
-                <div className="flex flex-col items-center justify-start w-7/12 px-10 py-12">
+                <div className="flex flex-col items-center justify-start w-full lg:w-7/12 px-0 lg:px-10 py-8 lg:py-12">
                     <h1 className="text-4xl font-extrabold text-white mb-6 text-center w-full">{post.title}</h1>
                     {post.coverImage && (
                         <div className="mb-8 w-full aspect-[16/9] overflow-hidden rounded-2xl border-2 border-secondary shadow-lg flex items-center justify-center bg-black">
@@ -91,10 +90,9 @@ function Blog() {
                     </div>
                 </div>
 
-
                 {/* Tags Related Blogs cards Section */}
                 {/* ----------------------------------------------------------------------------- */}
-                <div className="flex flex-col items-center justify-start w-1/4 min-w-[120px] bg-primary/80 p-6 border-l border-secondary">
+                <div className="flex flex-col items-center justify-start w-full lg:w-1/4 min-w-[120px] bg-primary/80 p-6 border-t lg:border-t-0 lg:border-l border-secondary">
                     <div className="w-full rounded-xl shadow-lg p-4 flex flex-col">
                         <h3 className="text-xl text-white mb-4 mt-2">Related Blogs</h3>
                         <div className="w-full flex flex-col gap-4">
